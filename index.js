@@ -17,22 +17,20 @@ const args = {
     webapiKey,
 } 
 
-console.log(hashPassword);
-
 app.use(async ctx => {
     const client = await soap.createClientAsync(url);
     const result = await client.doQueryAllSysStatusAsync(args);
     const verKey = result[0].sysCountryStatus.item[0].verKey;
-
-    const login = await client.doLoginEncAsync({
+    const loginArgs = {
         userLogin: userLogin,
         userHashPassword: hashPassword,
         countryCode: 1,
         webapiKey,
         localVersion: verKey
-
-    })
-    console.log(login);
+    
+    }
+    const login = await client.doLoginEncAsync(loginArgs)
+    ctx.body = login[0];
 })
 
 app.listen(3000, () => {
